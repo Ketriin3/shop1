@@ -1,0 +1,56 @@
+def create_menu():
+    return {
+        'кава': 25,
+        'чай': 15,
+        'пиріжок': 10,
+        # Додайте інші товари за потреби
+    }
+
+def add_to_menu(menu):
+    item = input("Введіть назву нового товару: ").lower()
+    price = float(input(f"Введіть ціну за одиницю {item}: "))
+    menu[item] = price
+    print(f"Товар '{item}' додано до меню з ціною {price}.")
+
+def get_order(menu):
+    order = {}
+    while True:
+        item = input("Введіть назву товару (або 'закінчити' для завершення замовлення): ").lower()
+        if item == 'закінчити':
+            break
+
+        if item in menu:
+            quantity = int(input(f"Введіть кількість {item}: "))
+            order[item] = {'кількість': quantity, 'ціна за одиницю': menu[item]}
+        else:
+            print(f"Товар '{item}' не знайдено в меню. Можливо, ви хочете додати його до меню?")
+            add_new = input("Введіть 'так' або 'ні': ").lower()
+            if add_new == 'так':
+                add_to_menu(menu)
+                quantity = int(input(f"Введіть кількість {item}: "))
+                order[item] = {'кількість': quantity, 'ціна за одиницю': menu[item]}
+            else:
+                print(f"Товар '{item}' не додано до замовлення.")
+
+    return order
+
+def print_receipt(order):
+    total_cost = 0
+    print("\nЗамовлення:")
+    for item, details in order.items():
+        cost = details['кількість'] * details['ціна за одиницю']
+        total_cost += cost
+        print(f"{item}: {details['кількість']} x {details['ціна за одиницю']} = {cost}")
+    print(f"Загальна вартість замовлення: {total_cost}")
+
+def main():
+    cafe_menu = create_menu()
+    while True:
+        customer_order = get_order(cafe_menu)
+        print_receipt(customer_order)
+        add_more = input("Хочете прийняти ще одне замовлення? (так/ні): ").lower()
+        if add_more != 'так':
+            break
+
+if __name__ == "__main__":
+    main()
